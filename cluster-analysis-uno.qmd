@@ -1,0 +1,117 @@
+---
+title: "Exploratory Cluster Analysis for Josie Schafer"
+author: "Michael Flynn, Prior Analytics, LLC."
+fontsize: "11"
+format: 
+  html: default
+  pdf: default
+pdf-engine: pdflatex
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(brms)
+library(cluster)
+library(factoextra)
+library(dendextend)
+library(ggdendro)
+library(here)
+library(tmaptools)
+library(kableExtra)
+```
+
+
+# Cleaning Data
+
+This first code block loads the data and performs any necessary cleaning, rescaling, etc.
+
+I'm focusing primarily on broader demographic and institutional indicators for now, but also some more targeted variables that would likely help to explain disparate economic outcomes. For example, high-research universities granting PhDs or a higher number of community hospital beds. There are other variables that we could include that might be useful for some purposes (e.g. Medicare recipients by region) but I expect that these will be closely tracking other age-related demographic variables. 
+
+
+```{r data-cleaning}
+
+# Read in data and select relevant variables for clusters. 
+# Focus is on demographic and anchor institution variables.
+
+# Read in raw data file
+data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
+
+# List of variables to include in clustering
+varlist <- c("totpop_19", 
+             "popchange", 
+             "real_gdp_21", 
+             "labfor", 
+             "pov", 
+             "poc",
+             "highed", 
+             "forborn", 
+             "net_mig", 
+             "highered_emp_qcew", 
+             "highered_estab_qcew",
+             "hospital_emp_qcew", 
+             "hospital_estab_qcew",
+             "inst_ipeds_enrollment_all", 
+             "inst_ipeds_doctoralunihighrese", 
+             "inst_ipeds_pellawards",
+             "inst_hosp_ahacommunityhospitals",
+             "inst_hosp_ahabeds",
+             "inst_hosp_nihresearchfunding")
+
+# Rescale the variables from 0-1
+data.clean <- data |>
+  mutate(across(varlist, # Variables to scale
+                ~.x/max(.x),                                          # Scale relative to max
+                .names = "{col}_max")) |>                             # Add "max" suffix
+  dplyr::select(MSA, ends_with("_max")) |>                            # select chosen variables
+  column_to_rownames("MSA")
+```
+
+
+# Clustering Methods
+
+Here I start with agglomerative/hierarchical clustering methods. The goal as I understand it is to find a happy medium number of groups that illustrates the variability across regions and anchor institutions while still being tractable for analyses. 
+
+The priority here is to construct clusters on the basis of 1) anchor institution characteristics, and 2) demographic characteristics of the surrounding region. For now I'll combine these into a single cluster, but we may want to think about constructing two clusters, one on the basis of demographic traits and the other on the basis of anchor institution traits. This would help parse out effects later if the client is interested in using these as predictors in subsequent regression analyses. 
+
+I'm going to create a few different clusters and we can compare the characteristics and performance of each, and then choose which one the client likes best.
+
+
+```{r clustering-methods}
+
+distance <- dist(data.clean) # calculate Euclidian distance between obs
+
+hc.tree <- hclust(distance, method = "average") # Create cluster groupings based on distance
+
+
+# List of distances to use in generating clusters
+cluster.size.list <- list("5" = 5, 
+                          "10" = 10,
+                          "15" = 15,
+                          "20" = 20, 
+                          "25" = 25, 
+                          "30" = 30)
+
+cluster.ids <- map(
+  .x = seq_along(cluster.size.list),
+  .f = ~ cutree(hc.tree, k = cluster.size.list[[.x]])
+                   ) |> 
+  bind_cols() 
+
+names(cluster.ids) <- c("cluster_5", "cluster_10", "cluster_15", "cluster_20", "cluster_25", "cluster_30")
+
+data.out <- data.clean |> 
+  bind_cols(cluster.ids) 
+
+```
+
+```{r cluster-table}
+
+
+table.out <- kbl(data.out, longtable = TRUE) |> 
+  kable_styling(font_size = 9) |> 
+  scroll_box(height = "600px")
+
+table.out
+
+```
