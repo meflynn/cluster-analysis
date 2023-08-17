@@ -127,6 +127,8 @@ data.out <- data.clean |>
 
 @fig-cluster-histograms shows the distribution of the observations depending on the number of clusters chosen. In general, 25--35 clusters seems like a nice balance between parsimony and too much detail. Smaller numbers of clusters, like 5 or 10, group too many areas together (see the spike at group #1). In general we see there are regularly spikes like these, but we start to get more variability as we move towards the 25--30 range.
 
+The "ideal" number of clusters will also depend on modeling considerations as I briefly address below. Depending on what the final models look like you may want to use a smaller number of clusters. At some point there's going to be a tradeoff between the total number of clusters and the value added with respect to model inputs. 
+
 ```{r fig-cluster-histograms, message=FALSE}
 #| label: fig-cluster-histograms
 #| fig-cap: "Histograms showing the distribution of clusters depending on the number of clusters chosen."
@@ -197,28 +199,31 @@ table.out
 
 Here I'm just running a few models that look at how the clusters perform in predicting outcomes of interest. Again, this is something we can revisit given more time and some discussion to inject more domain knowledge into things. 
 
+One issue to consider is whether or not the final data will ultimately have more than ~350 observations. 25--35 dummy indicator variables and possibly various other covariates may be a lot relative to the total number of observations.
+
 ```{r linear-model-block}
 
 model.data <- data |> 
   bind_cols(cluster.ids)
 
 # GDP index models
-m1 <- lm(index_real_gdp_21 ~ cluster_10, data = model.data)
-m2 <- lm(index_real_gdp_21 ~ cluster_20, data = model.data)
-m3 <- lm(index_real_gdp_21 ~ cluster_30, data = model.data)
-m4 <- lm(index_real_gdp_21 ~ cluster_40, data = model.data)
+m1 <- lm(index_real_gdp_21 ~ factor(cluster_10), data = model.data)
+m2 <- lm(index_real_gdp_21 ~ factor(cluster_20), data = model.data)
+m3 <- lm(index_real_gdp_21 ~ factor(cluster_30), data = model.data)
+m4 <- lm(index_real_gdp_21 ~ factor(cluster_40), data = model.data)
 
 # GDP index models
-m5 <- lm(percapita_personal_income_21 ~ cluster_10, data = model.data)
-m6 <- lm(percapita_personal_income_21 ~ cluster_20, data = model.data)
-m7 <- lm(percapita_personal_income_21 ~ cluster_30, data = model.data)
-m8 <- lm(percapita_personal_income_21 ~ cluster_40, data = model.data)
+m5 <- lm(percapita_personal_income_21 ~ factor(cluster_10), data = model.data)
+m6 <- lm(percapita_personal_income_21 ~ factor(cluster_20), data = model.data)
+m7 <- lm(percapita_personal_income_21 ~ factor(cluster_30), data = model.data)
+m8 <- lm(percapita_personal_income_21 ~ factor(cluster_40), data = model.data)
 
 
 mlist <- list(m1, m2, m3, m4, m5, m6, m7, m8)
 
 modelsummary(mlist,
              fmt = 3,
+             stars = TRUE,
              estimate = "estimate",
              statistic = "std.error",
              output = "kableExtra") |> 
@@ -232,22 +237,23 @@ modelsummary(mlist,
 
 ```{r multilevel-model-block}
 # GDP index models
-m1 <- lmer(index_real_gdp_21 ~ cluster_10 + (1|State), data = model.data)
-m2 <- lmer(index_real_gdp_21 ~ cluster_20 + (1|State), data = model.data)
-m3 <- lmer(index_real_gdp_21 ~ cluster_30 + (1|State), data = model.data)
-m4 <- lmer(index_real_gdp_21 ~ cluster_40 + (1|State), data = model.data)
+m1 <- lmer(index_real_gdp_21 ~ factor(cluster_10) + (1|State), data = model.data)
+m2 <- lmer(index_real_gdp_21 ~ factor(cluster_20) + (1|State), data = model.data)
+m3 <- lmer(index_real_gdp_21 ~ factor(cluster_30) + (1|State), data = model.data)
+m4 <- lmer(index_real_gdp_21 ~ factor(cluster_40) + (1|State), data = model.data)
 
 # GDP inerdex models
-m5 <- lmer(percapita_personal_income_21 ~ cluster_10 + (1|State), data = model.data)
-m6 <- lmer(percapita_personal_income_21 ~ cluster_20 + (1|State), data = model.data)
-m7 <- lmer(percapita_personal_income_21 ~ cluster_30 + (1|State), data = model.data)
-m8 <- lmer(percapita_personal_income_21 ~ cluster_40 + (1|State), data = model.data)
+m5 <- lmer(percapita_personal_income_21 ~ factor(cluster_10) + (1|State), data = model.data)
+m6 <- lmer(percapita_personal_income_21 ~ factor(cluster_20) + (1|State), data = model.data)
+m7 <- lmer(percapita_personal_income_21 ~ factor(cluster_30) + (1|State), data = model.data)
+m8 <- lmer(percapita_personal_income_21 ~ factor(cluster_40) + (1|State), data = model.data)
 
 
 mlist <- list(m1, m2, m3, m4, m5, m6, m7, m8)
 
 modelsummary(mlist,
              fmt = 3,
+             stars = TRUE,
              estimate = "estimate",
              statistic = "std.error",
              notes = c("State used as grouping term."),
