@@ -150,12 +150,16 @@ patchwork::wrap_plots(plot.out)
 ```{r cluster-table}
 
 
-table.out <- data |> 
+table.data <- data |> 
   bind_cols(cluster.ids) |> 
   dplyr::select(varlist, cluster_30) |> 
   group_by(cluster_30) |> 
   dplyr::summarise(across(everything(),
-                          mean)) |> 
+                          mean)) 
+
+
+
+table.out <- table.data |> 
   kbl(longtable = TRUE) |> 
   kable_styling(font_size = 8) |> 
   scroll_box(height = "600px", width = "800px") 
