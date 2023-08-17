@@ -275,26 +275,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(table.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Total Population (2019)"</span>,</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Population Change"</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Median Age"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population in Labor Force"</span>,</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population in Poverty"</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population People of Color"</span>,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"$% Population with Bachelor's Degree"</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population Foreign Born"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Net Domestic Migration"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Higher Education Employment"</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Higher Education Establishments"</span>,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospital Employment"</span>,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospital Establishments"</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Higher Education Enrollment"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"High Research Doctoral Degree Institutions"</span>,</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Total Pell Grant Amounts Awarded"</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospitals/Community Hospitals"</span>,</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospital Beds"</span>,</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"NIH Research Funding"</span>,</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Cluster"</span>)</span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(table.data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Cluster"</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                       <span class="st">"Total Population (2019)"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Population Change"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Median Age"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population in Labor Force"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population in Poverty"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population People of Color"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"$% Population with Bachelor's Degree"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"% Population Foreign Born"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Net Domestic Migration"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Higher Education Employment"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Higher Education Establishments"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospital Employment"</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospital Establishments"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Higher Education Enrollment"</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"High Research Doctoral Degree Institutions"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Total Pell Grant Amounts Awarded"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospitals/Community Hospitals"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"Hospital Beds"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                      <span class="st">"NIH Research Funding"</span>)</span>
 <span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
@@ -309,6 +309,7 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 <table class="table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Cluster</th>
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Total Population (2019)</th>
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Population Change</th>
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Median Age</th>
@@ -328,7 +329,6 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Hospitals/Community Hospitals</th>
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Hospital Beds</th>
 <th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">NIH Research Funding</th>
-<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Cluster</th>
 </tr>
 </thead>
 <tbody>
@@ -995,6 +995,564 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 </tbody>
 </table>
 </div>
+
+</div>
+</div>
+</section>
+<section id="modeling-exploration" class="level1">
+<h1>Modeling Exploration</h1>
+<p>Here I’m just running a few models that look at how the clusters perform in predicting outcomes of interest. Again, this is something we can revisit given more time and some discussion to inject more domain knowledge into things.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model.data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(cluster.ids)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP index models</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(index_real_gdp_21 <span class="sc">~</span> cluster_10, <span class="at">data =</span> model.data)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(index_real_gdp_21 <span class="sc">~</span> cluster_20, <span class="at">data =</span> model.data)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(index_real_gdp_21 <span class="sc">~</span> cluster_30, <span class="at">data =</span> model.data)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(index_real_gdp_21 <span class="sc">~</span> cluster_40, <span class="at">data =</span> model.data)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP index models</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_10, <span class="at">data =</span> model.data)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>m6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_20, <span class="at">data =</span> model.data)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>m7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_30, <span class="at">data =</span> model.data)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>m8 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_40, <span class="at">data =</span> model.data)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>mlist <span class="ot">&lt;-</span> <span class="fu">list</span>(m1, m2, m3, m4, m5, m6, m7, m8)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mlist,</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">"estimate"</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">statistic =</span> <span class="st">"std.error"</span>,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>             <span class="at">output =</span> <span class="st">"kableExtra"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"2021 GDP Index (1-4)"</span> <span class="ot">=</span> <span class="dv">4</span>, <span class="st">"2021 Per Capita Income (5-8)"</span> <span class="ot">=</span> <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="4" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+2021 GDP Index (1-4)
+</div></th>
+<th colspan="4" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+2021 Per Capita Income (5-8)
+</div></th>
+</tr>
+<tr class="odd">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;(1)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(2)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(3)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(4)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(5)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(6)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(7)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(8)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: center;">109.207</td>
+<td style="text-align: center;">109.875</td>
+<td style="text-align: center;">112.168</td>
+<td style="text-align: center;">111.634</td>
+<td style="text-align: center;">49714.224</td>
+<td style="text-align: center;">50077.038</td>
+<td style="text-align: center;">51695.772</td>
+<td style="text-align: center;">51401.245</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(2.083)</td>
+<td style="text-align: center;">(1.732)</td>
+<td style="text-align: center;">(1.604)</td>
+<td style="text-align: center;">(1.481)</td>
+<td style="text-align: center;">(1416.708)</td>
+<td style="text-align: center;">(1161.138)</td>
+<td style="text-align: center;">(1078.270)</td>
+<td style="text-align: center;">(984.068)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_10</td>
+<td style="text-align: center;">3.512</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">3367.677</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.841)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(572.083)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_20</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.585</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1581.777</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(0.326)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(218.236)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_30</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.691</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">786.528</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(0.186)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(125.154)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_40</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.556</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">599.912</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(0.119)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;"></td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">(79.188)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R2</td>
+<td style="text-align: center;">0.048</td>
+<td style="text-align: center;">0.064</td>
+<td style="text-align: center;">0.038</td>
+<td style="text-align: center;">0.059</td>
+<td style="text-align: center;">0.091</td>
+<td style="text-align: center;">0.132</td>
+<td style="text-align: center;">0.103</td>
+<td style="text-align: center;">0.143</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R2 Adj.</td>
+<td style="text-align: center;">0.045</td>
+<td style="text-align: center;">0.062</td>
+<td style="text-align: center;">0.036</td>
+<td style="text-align: center;">0.057</td>
+<td style="text-align: center;">0.089</td>
+<td style="text-align: center;">0.130</td>
+<td style="text-align: center;">0.100</td>
+<td style="text-align: center;">0.140</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: center;">2985.5</td>
+<td style="text-align: center;">2979.5</td>
+<td style="text-align: center;">2989.0</td>
+<td style="text-align: center;">2981.4</td>
+<td style="text-align: center;">7511.9</td>
+<td style="text-align: center;">7495.9</td>
+<td style="text-align: center;">7507.5</td>
+<td style="text-align: center;">7491.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BIC</td>
+<td style="text-align: center;">2997.0</td>
+<td style="text-align: center;">2991.1</td>
+<td style="text-align: center;">3000.5</td>
+<td style="text-align: center;">2992.9</td>
+<td style="text-align: center;">7523.4</td>
+<td style="text-align: center;">7507.4</td>
+<td style="text-align: center;">7519.0</td>
+<td style="text-align: center;">7503.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Log.Lik.</td>
+<td style="text-align: center;">−1489.730</td>
+<td style="text-align: center;">−1486.761</td>
+<td style="text-align: center;">−1491.490</td>
+<td style="text-align: center;">−1487.678</td>
+<td style="text-align: center;">−3752.929</td>
+<td style="text-align: center;">−3744.944</td>
+<td style="text-align: center;">−3750.730</td>
+<td style="text-align: center;">−3742.836</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: center;">17.429</td>
+<td style="text-align: center;">23.685</td>
+<td style="text-align: center;">13.772</td>
+<td style="text-align: center;">21.742</td>
+<td style="text-align: center;">34.653</td>
+<td style="text-align: center;">52.534</td>
+<td style="text-align: center;">39.495</td>
+<td style="text-align: center;">57.393</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RMSE</td>
+<td style="text-align: center;">17.71</td>
+<td style="text-align: center;">17.56</td>
+<td style="text-align: center;">17.80</td>
+<td style="text-align: center;">17.61</td>
+<td style="text-align: center;">12045.16</td>
+<td style="text-align: center;">11771.15</td>
+<td style="text-align: center;">11969.08</td>
+<td style="text-align: center;">11699.87</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP index models</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> cluster_10 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> cluster_20 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> cluster_30 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> cluster_40 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP inerdex models</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_10 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>m6 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_20 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>m7 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_30 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>m8 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> cluster_40 <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>mlist <span class="ot">&lt;-</span> <span class="fu">list</span>(m1, m2, m3, m4, m5, m6, m7, m8)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mlist,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">fmt =</span> <span class="dv">3</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">"estimate"</span>,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">statistic =</span> <span class="st">"std.error"</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">notes =</span> <span class="fu">c</span>(<span class="st">"State used as grouping term."</span>),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">output =</span> <span class="st">"kableExtra"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="st">"striped"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"2021 GDP Index (1-4)"</span> <span class="ot">=</span> <span class="dv">4</span>, <span class="st">"2021 Per Capita Income (5-8)"</span> <span class="ot">=</span> <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-striped table-sm small" data-quarto-postprocess="true">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="4" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+2021 GDP Index (1-4)
+</div></th>
+<th colspan="4" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+2021 Per Capita Income (5-8)
+</div></th>
+</tr>
+<tr class="odd">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;(1)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(2)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(3)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(4)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(5)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(6)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(7)</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">&nbsp;&nbsp;(8)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: center;">108.983</td>
+<td style="text-align: center;">109.456</td>
+<td style="text-align: center;">111.362</td>
+<td style="text-align: center;">110.357</td>
+<td style="text-align: center;">50226.250</td>
+<td style="text-align: center;">50298.044</td>
+<td style="text-align: center;">51869.232</td>
+<td style="text-align: center;">51621.101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(2.304)</td>
+<td style="text-align: center;">(2.035)</td>
+<td style="text-align: center;">(1.912)</td>
+<td style="text-align: center;">(1.815)</td>
+<td style="text-align: center;">(1474.526)</td>
+<td style="text-align: center;">(1233.525)</td>
+<td style="text-align: center;">(1166.839)</td>
+<td style="text-align: center;">(1057.439)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_10</td>
+<td style="text-align: center;">2.903</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">3122.560</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;">(0.812)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(579.139)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_20</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1.306</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">1522.832</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(0.316)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(220.859)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_30</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.569</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">752.824</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(0.175)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(124.762)</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cluster_40</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">0.513</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">571.356</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(0.111)</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">(79.019)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SD (Intercept State)</td>
+<td style="text-align: center;">8.960</td>
+<td style="text-align: center;">9.035</td>
+<td style="text-align: center;">9.078</td>
+<td style="text-align: center;">9.292</td>
+<td style="text-align: center;">2768.106</td>
+<td style="text-align: center;">2829.001</td>
+<td style="text-align: center;">3234.947</td>
+<td style="text-align: center;">2790.274</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; box-shadow: 0px 1.5px;">SD (Observations)</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">15.310</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">15.192</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">15.339</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">15.038</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">11745.817</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">11440.996</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">11536.033</td>
+<td style="text-align: center; box-shadow: 0px 1.5px;">11376.839</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num.Obs.</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+<td style="text-align: center;">347</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R2 Marg.</td>
+<td style="text-align: center;">0.033</td>
+<td style="text-align: center;">0.044</td>
+<td style="text-align: center;">0.026</td>
+<td style="text-align: center;">0.051</td>
+<td style="text-align: center;">0.079</td>
+<td style="text-align: center;">0.124</td>
+<td style="text-align: center;">0.095</td>
+<td style="text-align: center;">0.131</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">R2 Cond.</td>
+<td style="text-align: center;">0.280</td>
+<td style="text-align: center;">0.294</td>
+<td style="text-align: center;">0.279</td>
+<td style="text-align: center;">0.313</td>
+<td style="text-align: center;">0.128</td>
+<td style="text-align: center;">0.174</td>
+<td style="text-align: center;">0.161</td>
+<td style="text-align: center;">0.180</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AIC</td>
+<td style="text-align: center;">2940.9</td>
+<td style="text-align: center;">2938.7</td>
+<td style="text-align: center;">2946.1</td>
+<td style="text-align: center;">2936.7</td>
+<td style="text-align: center;">7480.4</td>
+<td style="text-align: center;">7465.4</td>
+<td style="text-align: center;">7476.1</td>
+<td style="text-align: center;">7463.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BIC</td>
+<td style="text-align: center;">2956.3</td>
+<td style="text-align: center;">2954.0</td>
+<td style="text-align: center;">2961.5</td>
+<td style="text-align: center;">2952.1</td>
+<td style="text-align: center;">7495.8</td>
+<td style="text-align: center;">7480.8</td>
+<td style="text-align: center;">7491.5</td>
+<td style="text-align: center;">7478.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ICC</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">RMSE</td>
+<td style="text-align: center;">14.40</td>
+<td style="text-align: center;">14.28</td>
+<td style="text-align: center;">14.42</td>
+<td style="text-align: center;">14.10</td>
+<td style="text-align: center;">11491.47</td>
+<td style="text-align: center;">11177.61</td>
+<td style="text-align: center;">11224.92</td>
+<td style="text-align: center;">11117.35</td>
+</tr>
+</tbody><tfoot>
+<tr class="odd">
+<td style="text-align: left; padding: 0;"><sup></sup> State used as grouping term.</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tfoot>
+
+</table>
+
 
 </div>
 </div>

@@ -19,6 +19,8 @@ library(ggdendro)
 library(here)
 library(tmaptools)
 library(kableExtra)
+library(lme4)
+library(modelsummary)
 ```
 
 
@@ -157,7 +159,8 @@ table.data <- data |>
   dplyr::summarise(across(everything(),
                           mean)) 
 
-names(table.data) <- c("Total Population (2019)",
+names(table.data) <- c("Cluster",
+                       "Total Population (2019)",
                       "Population Change",
                       "Median Age",
                       "% Population in Labor Force",
@@ -175,8 +178,7 @@ names(table.data) <- c("Total Population (2019)",
                       "Total Pell Grant Amounts Awarded",
                       "Hospitals/Community Hospitals",
                       "Hospital Beds",
-                      "NIH Research Funding",
-                      "Cluster")
+                      "NIH Research Funding")
 
 
 
@@ -186,5 +188,73 @@ table.out <- table.data |>
   scroll_box(height = "600px", width = "800px") 
 
 table.out
+
+```
+
+
+
+# Modeling Exploration
+
+Here I'm just running a few models that look at how the clusters perform in predicting outcomes of interest. Again, this is something we can revisit given more time and some discussion to inject more domain knowledge into things. 
+
+```{r linear-model-block}
+
+model.data <- data |> 
+  bind_cols(cluster.ids)
+
+# GDP index models
+m1 <- lm(index_real_gdp_21 ~ cluster_10, data = model.data)
+m2 <- lm(index_real_gdp_21 ~ cluster_20, data = model.data)
+m3 <- lm(index_real_gdp_21 ~ cluster_30, data = model.data)
+m4 <- lm(index_real_gdp_21 ~ cluster_40, data = model.data)
+
+# GDP index models
+m5 <- lm(percapita_personal_income_21 ~ cluster_10, data = model.data)
+m6 <- lm(percapita_personal_income_21 ~ cluster_20, data = model.data)
+m7 <- lm(percapita_personal_income_21 ~ cluster_30, data = model.data)
+m8 <- lm(percapita_personal_income_21 ~ cluster_40, data = model.data)
+
+
+mlist <- list(m1, m2, m3, m4, m5, m6, m7, m8)
+
+modelsummary(mlist,
+             fmt = 3,
+             estimate = "estimate",
+             statistic = "std.error",
+             output = "kableExtra") |> 
+  kable_styling("striped") |> 
+  add_header_above(c(" " = 1, "2021 GDP Index (1-4)" = 4, "2021 Per Capita Income (5-8)" = 4))
+  
+
+
+```
+
+
+```{r multilevel-model-block}
+# GDP index models
+m1 <- lmer(index_real_gdp_21 ~ cluster_10 + (1|State), data = model.data)
+m2 <- lmer(index_real_gdp_21 ~ cluster_20 + (1|State), data = model.data)
+m3 <- lmer(index_real_gdp_21 ~ cluster_30 + (1|State), data = model.data)
+m4 <- lmer(index_real_gdp_21 ~ cluster_40 + (1|State), data = model.data)
+
+# GDP inerdex models
+m5 <- lmer(percapita_personal_income_21 ~ cluster_10 + (1|State), data = model.data)
+m6 <- lmer(percapita_personal_income_21 ~ cluster_20 + (1|State), data = model.data)
+m7 <- lmer(percapita_personal_income_21 ~ cluster_30 + (1|State), data = model.data)
+m8 <- lmer(percapita_personal_income_21 ~ cluster_40 + (1|State), data = model.data)
+
+
+mlist <- list(m1, m2, m3, m4, m5, m6, m7, m8)
+
+modelsummary(mlist,
+             fmt = 3,
+             estimate = "estimate",
+             statistic = "std.error",
+             notes = c("State used as grouping term."),
+             output = "kableExtra") |> 
+  kable_styling("striped") |> 
+  add_header_above(c(" " = 1, "2021 GDP Index (1-4)" = 4, "2021 Per Capita Income (5-8)" = 4))
+  
+
 
 ```
