@@ -157,6 +157,27 @@ table.data <- data |>
   dplyr::summarise(across(everything(),
                           mean)) 
 
+names(table.data) <- c("Total Population (2019)",
+                      "Population Change",
+                      "Median Age",
+                      "% Population in Labor Force",
+                      "% Population in Poverty",
+                      "% Population People of Color",
+                      "$% Population with Bachelor's Degree",
+                      "% Population Foreign Born",
+                      "Net Domestic Migration",
+                      "Higher Education Employment",
+                      "Higher Education Establishments",
+                      "Hospital Employment",
+                      "Hospital Establishments",
+                      "Higher Education Enrollment",
+                      "High Research Doctoral Degree Institutions",
+                      "Total Pell Grant Amounts Awarded",
+                      "Hospitals/Community Hospitals",
+                      "Hospital Beds",
+                      "NIH Research Funding",
+                      "Cluster")
+
 
 
 table.out <- table.data |> 
