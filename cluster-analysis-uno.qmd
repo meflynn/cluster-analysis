@@ -201,7 +201,7 @@ Here I'm just running a few models that look at how the clusters perform in pred
 
 One issue to consider is whether or not the final data will ultimately have more than ~350 observations. 25--35 dummy indicator variables and possibly various other covariates may be a lot relative to the total number of observations.
 
-I use the GDP index here because it should facilitate a pretty simple linear model. 
+I use the GDP index and per capita income here because they should facilitate a pretty simple linear model. The residual checks at the end provide some basic support for this. They're not perfectly normally distributed, so in the future some adjustments to the models would be helpful to provide better fit.
 
 ```{r linear-model-block}
 
@@ -228,6 +228,7 @@ modelsummary(mlist,
              stars = TRUE,
              estimate = "estimate",
              statistic = "std.error",
+             title = "Linear Regression Models",
              output = "kableExtra") |> 
   kable_styling("striped") |> 
   add_header_above(c(" " = 1, "2021 GDP Index (1-4)" = 4, "2021 Per Capita Income (5-8)" = 4))
@@ -258,6 +259,7 @@ modelsummary(mmlist,
              stars = TRUE,
              estimate = "estimate",
              statistic = "std.error",
+             title = "Multilevel Regression Models",
              notes = c("State used as grouping term."),
              output = "kableExtra") |> 
   kable_styling("striped") |> 
