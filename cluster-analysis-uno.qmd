@@ -161,6 +161,10 @@ table.data <- data |>
   dplyr::summarise(across(everything(),
                           mean)) 
 
+# Save output for table to send to client.
+write_csv(table.data,
+          here::here("data/table-data-output"))
+
 names(table.data) <- c("Cluster",
                        "Total Population (2019)",
                       "Population Change",
