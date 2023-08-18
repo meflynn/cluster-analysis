@@ -201,6 +201,8 @@ Here I'm just running a few models that look at how the clusters perform in pred
 
 One issue to consider is whether or not the final data will ultimately have more than ~350 observations. 25--35 dummy indicator variables and possibly various other covariates may be a lot relative to the total number of observations.
 
+I use the GDP index here because it should facilitate a pretty simple linear model. 
+
 ```{r linear-model-block}
 
 model.data <- data |> 
@@ -212,7 +214,7 @@ m2 <- lm(index_real_gdp_21 ~ factor(cluster_20), data = model.data)
 m3 <- lm(index_real_gdp_21 ~ factor(cluster_30), data = model.data)
 m4 <- lm(index_real_gdp_21 ~ factor(cluster_40), data = model.data)
 
-# GDP index models
+# Per Capita Income models
 m5 <- lm(percapita_personal_income_21 ~ factor(cluster_10), data = model.data)
 m6 <- lm(percapita_personal_income_21 ~ factor(cluster_20), data = model.data)
 m7 <- lm(percapita_personal_income_21 ~ factor(cluster_30), data = model.data)
@@ -237,21 +239,21 @@ modelsummary(mlist,
 
 ```{r multilevel-model-block}
 # GDP index models
-m1 <- lmer(index_real_gdp_21 ~ factor(cluster_10) + (1|State), data = model.data)
-m2 <- lmer(index_real_gdp_21 ~ factor(cluster_20) + (1|State), data = model.data)
-m3 <- lmer(index_real_gdp_21 ~ factor(cluster_30) + (1|State), data = model.data)
-m4 <- lmer(index_real_gdp_21 ~ factor(cluster_40) + (1|State), data = model.data)
+mm1 <- lmer(index_real_gdp_21 ~ factor(cluster_10) + (1|State), data = model.data)
+mm2 <- lmer(index_real_gdp_21 ~ factor(cluster_20) + (1|State), data = model.data)
+mm3 <- lmer(index_real_gdp_21 ~ factor(cluster_30) + (1|State), data = model.data)
+mm4 <- lmer(index_real_gdp_21 ~ factor(cluster_40) + (1|State), data = model.data)
 
-# GDP inerdex models
-m5 <- lmer(percapita_personal_income_21 ~ factor(cluster_10) + (1|State), data = model.data)
-m6 <- lmer(percapita_personal_income_21 ~ factor(cluster_20) + (1|State), data = model.data)
-m7 <- lmer(percapita_personal_income_21 ~ factor(cluster_30) + (1|State), data = model.data)
-m8 <- lmer(percapita_personal_income_21 ~ factor(cluster_40) + (1|State), data = model.data)
+# Per Capita Income models
+mm5 <- lmer(percapita_personal_income_21 ~ factor(cluster_10) + (1|State), data = model.data)
+mm6 <- lmer(percapita_personal_income_21 ~ factor(cluster_20) + (1|State), data = model.data)
+mm7 <- lmer(percapita_personal_income_21 ~ factor(cluster_30) + (1|State), data = model.data)
+mm8 <- lmer(percapita_personal_income_21 ~ factor(cluster_40) + (1|State), data = model.data)
 
 
-mlist <- list(m1, m2, m3, m4, m5, m6, m7, m8)
+mmlist <- list(mm1, mm2, mm3, mm4, mm5, mm6, mm7, mm8)
 
-modelsummary(mlist,
+modelsummary(mmlist,
              fmt = 3,
              stars = TRUE,
              estimate = "estimate",
@@ -263,4 +265,46 @@ modelsummary(mlist,
   
 
 
+```
+
+
+# Residual Check
+
+## Linear Regression
+```{r residual-check-lm}
+
+residual.list.lm <- map(
+  .x = seq_along(mlist),
+  .f = ~ mlist[[.x]]$residuals
+)
+
+
+plot.out <- map(
+  .x = residual.list.lm,
+  .f = ~ggplot(data = as.data.frame(.x), aes(x = .)) +
+      geom_histogram(bins = 40)
+)
+
+
+patchwork::wrap_plots(plot.out)
+```
+
+## Multilevel Model
+
+```{r residual-check-mm}
+
+residual.list.mm <- map(
+  .x = seq_along(mmlist),
+  .f = ~ residuals(mmlist[[.x]])
+)
+
+
+plot.out <- map(
+  .x = residual.list.mm,
+  .f = ~ggplot(data = as.data.frame(.x), aes(x = .)) +
+      geom_histogram(bins = 40)
+)
+
+
+patchwork::wrap_plots(plot.out)
 ```

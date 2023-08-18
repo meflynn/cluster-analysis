@@ -1004,6 +1004,7 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 <h1>Modeling Exploration</h1>
 <p>Here I’m just running a few models that look at how the clusters perform in predicting outcomes of interest. Again, this is something we can revisit given more time and some discussion to inject more domain knowledge into things.</p>
 <p>One issue to consider is whether or not the final data will ultimately have more than ~350 observations. 25–35 dummy indicator variables and possibly various other covariates may be a lot relative to the total number of observations.</p>
+<p>I use the GDP index here because it should facilitate a pretty simple linear model.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model.data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(cluster.ids)</span>
@@ -1014,7 +1015,7 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_30), <span class="at">data =</span> model.data)</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_40), <span class="at">data =</span> model.data)</span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP index models</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Per Capita Income models</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_10), <span class="at">data =</span> model.data)</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>m6 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_20), <span class="at">data =</span> model.data)</span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>m7 <span class="ot">&lt;-</span> <span class="fu">lm</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_30), <span class="at">data =</span> model.data)</span>
@@ -3310,25 +3311,25 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP index models</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_10) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_20) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_30) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_40) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mm1 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_10) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mm2 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_20) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>mm3 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_30) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>mm4 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(index_real_gdp_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_40) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP inerdex models</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>m5 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_10) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>m6 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_20) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>m7 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_30) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Per Capita Income models</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>mm5 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_10) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>mm6 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_20) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>mm7 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_30) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>m8 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_40) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mm8 <span class="ot">&lt;-</span> <span class="fu">lmer</span>(percapita_personal_income_21 <span class="sc">~</span> <span class="fu">factor</span>(cluster_40) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>State), <span class="at">data =</span> model.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>boundary (singular) fit: see help('isSingular')</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mlist <span class="ot">&lt;-</span> <span class="fu">list</span>(m1, m2, m3, m4, m5, m6, m7, m8)</span>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mmlist <span class="ot">&lt;-</span> <span class="fu">list</span>(mm1, mm2, mm3, mm4, mm5, mm6, mm7, mm8)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mlist,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mmlist,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">fmt =</span> <span class="dv">3</span>,</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">estimate =</span> <span class="st">"estimate"</span>,</span>
@@ -5636,8 +5637,55 @@ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</co
 
 </div>
 </div>
+</section>
+<section id="residual-check" class="level1">
+<h1>Residual Check</h1>
+<section id="linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="linear-regression">Linear Regression</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>residual.list.lm <span class="ot">&lt;-</span> <span class="fu">map</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> <span class="fu">seq_along</span>(mlist),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="sc">~</span> mlist[[.x]]<span class="sc">$</span>residuals</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plot.out <span class="ot">&lt;-</span> <span class="fu">map</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> residual.list.lm,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="sc">~</span><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">as.data.frame</span>(.x), <span class="fu">aes</span>(<span class="at">x =</span> .)) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plot.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cluster-analysis-uno_files/figure-html/residual-check-lm-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="multilevel-model" class="level2">
+<h2 class="anchored" data-anchor-id="multilevel-model">Multilevel Model</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>residual.list.mm <span class="ot">&lt;-</span> <span class="fu">map</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> <span class="fu">seq_along</span>(mmlist),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="sc">~</span> <span class="fu">residuals</span>(mmlist[[.x]])</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>plot.out <span class="ot">&lt;-</span> <span class="fu">map</span>(</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> residual.list.mm,</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="sc">~</span><span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">as.data.frame</span>(.x), <span class="fu">aes</span>(<span class="at">x =</span> .)) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>patchwork<span class="sc">::</span><span class="fu">wrap_plots</span>(plot.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="cluster-analysis-uno_files/figure-html/residual-check-mm-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
