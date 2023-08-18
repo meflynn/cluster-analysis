@@ -117,9 +117,43 @@ cluster.ids <- map(
 
 names(cluster.ids) <- c("cluster_5", "cluster_10", "cluster_15", "cluster_20", "cluster_25", "cluster_30", "cluster_35", "cluster_40")
 
-data.out <- data.clean |> 
-  bind_cols(cluster.ids) 
+data.out <- data |> 
+  bind_cols(cluster.ids) |> 
+  dplyr::select(starts_with("cluster"), Name, State, MSA, varlist)
 
+names(data.out) <- c("Cluster 5",
+                     "Cluster 10",
+                     "Cluster 15",
+                     "Cluster 20",
+                     "Cluster 25",
+                     "Cluster 30",
+                     "Cluster 35",
+                     "Cluster 40",
+                     "Name",
+                     "State",
+                     "MSA",
+                     "Total Population (2019)",
+                     "Population Change",
+                     "Median Age",
+                     "% Population in Labor Force",
+                     "% Population in Poverty",
+                     "% Population People of Color",
+                     "$% Population with Bachelor's Degree",
+                     "% Population Foreign Born",
+                     "Net Domestic Migration",
+                     "Higher Education Employment",
+                     "Higher Education Establishments",
+                     "Hospital Employment",
+                     "Hospital Establishments",
+                     "Higher Education Enrollment",
+                     "High Research Doctoral Degree Institutions",
+                     "Total Pell Grant Amounts Awarded",
+                     "Hospitals/Community Hospitals",
+                     "Hospital Beds",
+                     "NIH Research Funding")
+
+write_csv(data.out,
+          here::here("data/raw-data-with-cluster-ids.csv"))
 
 ```
 
@@ -133,8 +167,6 @@ The "ideal" number of clusters will also depend on modeling considerations as I 
 #| label: fig-cluster-histograms
 #| fig-cap: "Histograms showing the distribution of clusters depending on the number of clusters chosen."
 cluster.list <- list("cluster_5", "cluster_10", "cluster_15", "cluster_20", "cluster_25", "cluster_30", "cluster_35", "cluster_40")
-
-
 
 plot.out <- data.out |> 
   dplyr::select(starts_with("cluster")) |> 
