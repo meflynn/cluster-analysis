@@ -90,11 +90,11 @@ The priority here is to construct clusters on the basis of 1) anchor institution
 
 I'm going to create a few different clusters and we can compare the characteristics and performance of each, and then choose which one the client likes best.
 
-I chose the "complete" method for the `hclust()` function because it generates a better distribution of clusters than the other methods. For example, others tend to produce either very flat distributions, in which case you may just as well use dummy variables for each MSA or city, or they produce oddly concentrated clusters with 80-90% of observatiosn falling into cluster group 2.
+I chose the "complete" method for the `hclust()` function because it generates a better distribution of clusters than the other methods. For example, others tend to produce either very flat distributions, in which case you may just as well use dummy variables for each MSA or city, or they produce oddly concentrated clusters with 80-90% of observations falling into cluster group 2.
 
 ```{r clustering-methods}
 
-distance <- dist(data.clean) # calculate Euclidian distance between obs
+distance <- dist(data.clean) # calculate Euclidean distance between obs
 
 hc.tree <- hclust(distance, method = "complete") # Create cluster groupings based on distance
 
