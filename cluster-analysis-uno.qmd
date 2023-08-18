@@ -297,6 +297,8 @@ patchwork::wrap_plots(plot.out)
 
 ## Multilevel Model
 
+The multilevel models look similar but there's generally less dispersion in the residuals as compared to the simple linear model.
+
 ```{r residual-check-mm}
 
 residual.list.mm <- map(

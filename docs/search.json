@@ -18,6 +18,6 @@
     "href": "cluster-analysis-uno.html#multilevel-model",
     "title": "Exploratory Cluster Analysis for Josie Schafer",
     "section": "Multilevel Model",
-    "text": "Multilevel Model\n\nresidual.list.mm &lt;- map(\n  .x = seq_along(mmlist),\n  .f = ~ residuals(mmlist[[.x]])\n)\n\n\nplot.out &lt;- map(\n  .x = residual.list.mm,\n  .f = ~ggplot(data = as.data.frame(.x), aes(x = .)) +\n      geom_histogram(bins = 40)\n)\n\n\npatchwork::wrap_plots(plot.out)"
+    "text": "Multilevel Model\nThe multilevel models look similar but there’s generally less dispersion in the residuals as compared to the simple linear model.\n\nresidual.list.mm &lt;- map(\n  .x = seq_along(mmlist),\n  .f = ~ residuals(mmlist[[.x]])\n)\n\n\nplot.out &lt;- map(\n  .x = residual.list.mm,\n  .f = ~ggplot(data = as.data.frame(.x), aes(x = .)) +\n      geom_histogram(bins = 40)\n)\n\n\npatchwork::wrap_plots(plot.out)"
   }
 ]
