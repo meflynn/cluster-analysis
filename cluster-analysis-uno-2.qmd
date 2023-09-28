@@ -6,8 +6,8 @@ format:
   html: default
   pdf: default
 pdf-engine: pdflatex
-bibliography: references.bib
 csl: "CSL/apsa.csl"
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -38,15 +38,13 @@ library(modelsummary)
 3.  Also possible to look at principal components analysis or factor analysis.
 4.  Revisit the distance calculation.
 
-- Hierarchical clustering may still make sense if we're calculating the distance using alternative methods. 
-- Euclidean distance will calculate distance on the basis of similarities across levels of inputs. Euclidean is the default, but other algorithms may offer better results. 
-- Correlation based distance calculations may make more sense as we're interested in similarities along the basis of the input measures.
-- Be aware that we're looking at the `dist()` function distance calculation and then the algorithm for calculating the clusters in `hclust()`. The former handles the distance calculation and the latter handles the breakdown into different clusters.
-- We want to continue rescaling the measures so that certain large values from spending variables don't overwhelm the influence of other variables not on such large scales.
+-   Hierarchical clustering may still make sense if we're calculating the distance using alternative methods.
+-   Euclidean distance will calculate distance on the basis of similarities across levels of inputs. Euclidean is the default, but other algorithms may offer better results.
+-   Correlation based distance calculations may make more sense as we're interested in similarities along the basis of the input measures.
+-   Be aware that we're looking at the `dist()` function distance calculation and then the algorithm for calculating the clusters in `hclust()`. The former handles the distance calculation and the latter handles the breakdown into different clusters.
+-   We want to continue rescaling the measures so that certain large values from spending variables don't overwhelm the influence of other variables not on such large scales.
 
 5.  I'm going to try another rescaling procedure, but there are some definite outliers, so reverting to the 0-1 scaling may prove to be a better option still. But some spending-based measures produce large outliers and this may help to differentiate some MSAs.
-
-
 
 # Data Cleaning
 
@@ -90,8 +88,6 @@ data.clean <- data |>
   column_to_rownames("MSA")
 ```
 
-
-
 # Clustering Methods
 
 ## Hierarchical Clustering Procedure
@@ -99,7 +95,6 @@ data.clean <- data |>
 Rescaling to z scores rather than scaling relative to the maximum of the category produces more evenly distributed clusters, all else being equal.
 
 I'm keeping the same number of clusters (i.e. 8 clusters with sizes ranging from 5--40, increasing in increments of 5).
-
 
 ### Euclidean Distance Method
 
@@ -172,9 +167,9 @@ write_csv(data.out.euc,
 
 #### Visualization for Euclidean Distance Method
 
-This part includes some sample figures to show what the distribution of some of the inputs looks like across clusters. 
+This part includes some sample figures to show what the distribution of some of the inputs looks like across clusters.
 
-One important take away across all methods is that the more clusters we get the more likely we are to have similar average levels of a variable across clusters. 
+One important take away across all methods is that the more clusters we get the more likely we are to have similar average levels of a variable across clusters.
 
 For the Euclidean distance calculation method, we end up with several very small clusters as we increase the total number of clusters. So as we move to more than 15-20 clusters we start seeing lots of clusters with only a few, or even a single, member.
 
@@ -221,14 +216,26 @@ ggplot(data = data.long) +
   facet_wrap(. ~ `Cluster Size`) +
   labs(title = "Euclidean Distance Method",
        subtitle = "Hospital Establishments")
+
+
+ggplot(data = data.long) +
+  geom_point(aes(x = `Cluster ID`, y = `NIH Research Funding`)) +
+  facet_wrap(. ~ `Cluster Size`) +
+  labs(title = "Euclidean Distance Method",
+       subtitle = "NIH Research Funding")
+
+
+ggplot(data = data.long) +
+  geom_point(aes(x = `Cluster ID`, y = `Total Pell Grant Amounts Awarded`)) +
+  facet_wrap(. ~ `Cluster Size`) +
+  labs(title = "Euclidean Distance Method",
+       subtitle = "Total Pell Grant Amounts Awarded")
   
 ```
 
-
 ### Correlation Method
 
-This time I calculate distance according to the correlation method. Resources indicate that the correlation method can be better for matching similarities across dimensions, whereas Euclidean distance is going to be better at matching on the basis of volume/spending levels, regardless of similarities across particular dimensions/variables [@jamesIntroductionStatisticalLearning2021]. If the goal is to generate clusters that are more readily identifiable on the basis of the three core dimensions, this is more likely to do that.
-
+This time I calculate distance according to the correlation method. Resources indicate that the correlation method can be better for matching similarities across dimensions, whereas Euclidean distance is going to be better at matching on the basis of volume/spending levels, regardless of similarities across particular dimensions/variables [@JamesWittenHastieTibshirani2021]. If the goal is to generate clusters that are more readily identifiable on the basis of the three core dimensions, this is more likely to do that.
 
 ```{r clustering-methods-correlation}
 
@@ -299,6 +306,7 @@ write_csv(data.out.cor,
 
 #### Visualization for Correlation Method
 
+What we find below is that we get more even distribution of the MSAs across clusters. However, we also tend to find some variables have clusters with a high level of variation within cluster. Some clusters are tighly grouped on the input variable of interest while others see a very large range in input variable values.
 
 ```{r}
 
@@ -343,9 +351,22 @@ ggplot(data = data.long) +
   facet_wrap(. ~ `Cluster Size`) +
   labs(title = "Correlation Method",
        subtitle = "Hospital Establishments")
+
+
+ggplot(data = data.long) +
+  geom_point(aes(x = `Cluster ID`, y = `NIH Research Funding`)) +
+  facet_wrap(. ~ `Cluster Size`) +
+  labs(title = "Correlation Method",
+       subtitle = "NIH Research Funding")
+
+
+ggplot(data = data.long) +
+  geom_point(aes(x = `Cluster ID`, y = `Total Pell Grant Amounts Awarded`)) +
+  facet_wrap(. ~ `Cluster Size`) +
+  labs(title = "Correlation Method",
+       subtitle = "Total Pell Grant Amounts Awarded")
   
 ```
-
 
 ### K-Means Method
 
@@ -473,5 +494,19 @@ ggplot(data = data.long) +
   facet_wrap(. ~ `Cluster Size`) +
   labs(title = "K-Means Method",
        subtitle = "Hospital Establishments")
+
+
+ggplot(data = data.long) +
+  geom_point(aes(x = `Cluster ID`, y = `NIH Research Funding`)) +
+  facet_wrap(. ~ `Cluster Size`) +
+  labs(title = "K-Means Method",
+       subtitle = "NIH Research Funding")
+
+
+ggplot(data = data.long) +
+  geom_point(aes(x = `Cluster ID`, y = `Total Pell Grant Amounts Awarded`)) +
+  facet_wrap(. ~ `Cluster Size`) +
+  labs(title = "K-Means Method",
+       subtitle = "Total Pell Grant Amounts Awarded")
 
 ```
