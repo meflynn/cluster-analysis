@@ -1,0 +1,27 @@
+project:
+  title: "Exploratory Cluster Analysis Part 2"
+  type: website
+  output-dir: docs
+
+execute:
+  freeze: auto
+
+website:
+  repo-url: "https://github.com/meflynn/cluster-analysis"
+
+  page-navigation: true
+
+  navbar:
+    pinned: true
+    search: true
+    right:
+      - text: "Part 1"
+        href: cluster-analysis-uno.qmd
+      - text: "Part 2"
+        href: cluster-analysis-uno-2.qmd
+
+format:
+  html:
+    theme: default
+    toc: true
+
