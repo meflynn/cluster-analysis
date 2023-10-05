@@ -1,0 +1,138 @@
+---
+title: "Exploratory Cluster Analysis for Josie Schafer: Part 3"
+author: "Michael Flynn, Prior Analytics, LLC."
+fontsize: "11"
+format: 
+  html: default
+  pdf: default
+pdf-engine: pdflatex
+csl: "CSL/apsa.csl"
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(brms)
+library(cluster)
+library(factoextra)
+library(dendextend)
+library(ggdendro)
+library(here)
+library(tmaptools)
+library(kableExtra)
+library(lme4)
+library(modelsummary)
+```
+
+# Goals
+
+1. Build on previous work but try using factor analysis to develop more meaningful clusters.
+2. Possibly use cluster analysis on the resulting factor analysis values or groupings to generate clusters of MSAs that can be meaningfully grouped on the basis of demographics, academic, and healthcare anchor institutions. 
+
+# Notes
+
+1. Check variables to make sure direction of encoding is common across input variables. 
+
+# Data Cleaning
+
+Just like last time we read in the data and clean it and rescale the variables. Again, rescaling is done using z-score methods This seems to help produce more evenly distributed clusters.
+
+```{r data-cleaning}
+
+# Read in data and select relevant variables for clusters. 
+# Focus is on demographic and anchor institution variables.
+
+# Read in raw data file
+data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
+
+# List of variables to include in clustering
+varlist <- c("totpop_19",  # Total pop
+             "popchange",  # pop change
+             "medage",     # Median age
+             "labfor",     # percent population in labor force
+             "pov",       # percent population living in poverty
+             "poc",       # people of color as percent of pop
+             "highed",     # Percent population with at least bachelor's 
+             "forborn",    # Percent population foreign born
+             "net_mig",    # Net domestic migration
+             "highered_emp_qcew", 
+             "highered_estab_qcew",
+             "hospital_emp_qcew", 
+             "hospital_estab_qcew",
+             "inst_ipeds_enrollment_all", 
+             "inst_ipeds_doctoralunihighrese", 
+             "inst_ipeds_pellawards",
+             "inst_hosp_ahacommunityhospitals",
+             "inst_hosp_ahabeds",
+             "inst_hosp_nihresearchfunding")
+
+# Rescale the variables from 0-1
+data.clean <- data |>
+  mutate(across(all_of(varlist), # Variables to scale
+                ~scale(.x),                                          # Scale relative to max
+                .names = "{col}_rescaled")) |>                             # Add "max" suffix
+  dplyr::select(MSA, ends_with("_rescaled")) |>                            # select chosen variables
+  column_to_rownames("MSA")
+```
+
+
+# Factor Analysis
+
+```{r factor-correlation}
+
+cor.mat <- round(cor(data.clean), 2)
+
+```
+
+
+```{r factor-analysis-1}
+
+data.clean.orig <- data |> 
+  column_to_rownames("MSA") |> 
+  dplyr::select(-c("Name", "State"))
+
+
+factanal(x = data.clean,
+         factors = 2,
+         rotation = "varimax",
+         control = list(nstart = 1e5))
+```
+
+
+```{r principal-components}
+
+
+data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
+
+varlist.short <- c( "hospital_emp_qcew", 
+             "hospital_estab_qcew",
+             "inst_hosp_ahacommunityhospitals",
+             "inst_hosp_ahabeds",
+             "inst_hosp_nihresearchfunding")
+
+# Rescale the variables from 0-1
+data.clean <- data |>
+  mutate(across(all_of(varlist.short), # Variables to scale
+                ~scale(.x),                                          # Scale relative to max
+                .names = "{col}_rescaled")) |>                             # Add "max" suffix
+  dplyr::select(MSA, ends_with("_rescaled")) |>                            # select chosen variables
+  column_to_rownames("MSA")
+
+
+components <- principal(data.clean,
+                        nfactors = 1)
+
+components
+
+biplot(components)
+
+scores <- components$scores
+
+data.out <- data |> 
+  bind_cols(scores) 
+
+
+
+
+```
