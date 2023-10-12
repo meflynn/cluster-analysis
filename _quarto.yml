@@ -19,7 +19,8 @@ website:
         href: cluster-analysis-uno.qmd
       - text: "Part 2"
         href: cluster-analysis-uno-2.qmd
-
+      - text: "Part 3"
+        href: cluster-analysis-uno-3.qmd
 format:
   html:
     theme: default

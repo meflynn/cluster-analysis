@@ -4,8 +4,8 @@ author: "Michael Flynn, Prior Analytics, LLC."
 fontsize: "11"
 format: 
   html: default
-  pdf: default
-pdf-engine: pdflatex
+#  pdf: default
+#pdf-engine: pdflatex
 csl: "CSL/apsa.csl"
 bibliography: references.bib
 ---
@@ -23,6 +23,7 @@ library(tmaptools)
 library(kableExtra)
 library(lme4)
 library(modelsummary)
+library(psych)
 ```
 
 # Goals
@@ -32,7 +33,8 @@ library(modelsummary)
 
 # Notes
 
-1. Check variables to make sure direction of encoding is common across input variables. 
+1. Check variables to make sure direction of encoding makes sense across input variables. 
+
 
 # Data Cleaning
 
@@ -46,93 +48,210 @@ Just like last time we read in the data and clean it and rescale the variables. 
 # Read in raw data file
 data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
 
-# List of variables to include in clustering
-varlist <- c("totpop_19",  # Total pop
-             "popchange",  # pop change
-             "medage",     # Median age
-             "labfor",     # percent population in labor force
-             "pov",       # percent population living in poverty
-             "poc",       # people of color as percent of pop
-             "highed",     # Percent population with at least bachelor's 
-             "forborn",    # Percent population foreign born
-             "net_mig",    # Net domestic migration
-             "highered_emp_qcew", 
-             "highered_estab_qcew",
-             "hospital_emp_qcew", 
-             "hospital_estab_qcew",
-             "inst_ipeds_enrollment_all", 
-             "inst_ipeds_doctoralunihighrese", 
-             "inst_ipeds_pellawards",
-             "inst_hosp_ahacommunityhospitals",
-             "inst_hosp_ahabeds",
-             "inst_hosp_nihresearchfunding")
+# Create variable lists for each of the substantive focus areas
+vars.demo <- c("totpop_19", # total population
+               "popchange", # population change
+               "medage",    # median age
+               "poc",       #percent people of color
+               "highed",     # percent pop with bachelor's or higher
+               "forborn",     # percent pop foreign born
+               #"noenglish",  # percent pop speaking english less than very well (omit correlated 0.90 with forborn)
+               "net_mig")     # net domestic migration
 
-# Rescale the variables from 0-1
+vars.econ <- c("pov",      # percent people living in poverty
+              "youngpov",  #percent population under 18 living in poverty
+              "oldpov",    # percent population over 65 living in poverty)
+              #"labfor",    # percent pop in labor force (omit 0.92 cor with emp)
+              "emp",       # percent people employed
+              "nohealthin", # population with no health insurance
+              #"ownerocc",    # percent pop owner (omit perfectly neg correlated wtih rent)
+               "renterocc"   # percent pop renter
+              )
+              
+vars.hied <- c("highered_emp_qcew", # Higher education employment
+                 "highered_estab_qcew", # Higher education establishments
+                 "inst_highered_endowment", # higher education inst endowments for National association of college and uni business officers
+                 "inst_highered_nihresearchfunding", #NIH research funding
+                 "inst_highered_nsfresearchfunding", #NSF research funding
+                 "inst_ipeds_enrollment_all", # total enrollment
+                 "inst_ipeds_associatescolleges", # associates granting institutions
+                 "inst_ipeds_baccalaureatecolleges", # bachelor's granting institutions
+                 "inst_ipeds_doctoralunihighrese", # doctoral granting high research institutions
+                 "inst_ipeds_undergradgrad", # higher ed undergraduate enrollment
+                 "inst_ipeds_totalgradenrollment", # higher ed institutions graduate enrollment
+                 "inst_ipeds_completions", # higher ed completions
+                 "inst_ipeds_pellawards") # Pell awards total amount
+
+
+vars.hosp <- c("hospital_emp_qcew", # Hospital employment
+               "hospital_estab_qcew", # Hostital Establishments
+               "inst_hosp_ahacommunityhospitals", # Community hospitals
+               "inst_hosp_ahabeds", # Community hospital beds
+               "inst_hosp_ahaadmissions", # Community hospital admissions
+               "inst_hosp_ahasurgicaloperations", # Surgical operations
+               "inst_hosp_nihresearchfunding", # Hospital nih research funding
+               "inst_hosp_medbeneficiaries") # Medicare beneficiaries
+
+
+# Rescale the variables 
+# I'm also changing the direction of the economic variables so positive values are more "positive"
 data.clean <- data |>
-  mutate(across(all_of(varlist), # Variables to scale
+  mutate(across(all_of(vars.econ),
+                ~ 100 - .x),
+         emp = 100 - emp) |> 
+  mutate(across(all_of(c(vars.demo, vars.econ, vars.hied, vars.hosp)), # Variables to scale
                 ~scale(.x),                                          # Scale relative to max
                 .names = "{col}_rescaled")) |>                             # Add "max" suffix
   dplyr::select(MSA, ends_with("_rescaled")) |>                            # select chosen variables
   column_to_rownames("MSA")
+
+
+# Break data up into substantive component data sets
+
+# Demographic data
+data.clean.demo <- data.clean |> 
+  dplyr::select(starts_with(vars.demo))
+
+# Economic data
+data.clean.econ <- data.clean |> 
+  dplyr::select(starts_with(vars.econ))
+
+# Higher education data
+data.clean.hied <- data.clean |> 
+  dplyr::select(starts_with(vars.hied))
+
+# Hospital data
+data.clean.hosp <- data.clean |> 
+  dplyr::select(starts_with(vars.hosp))
+
 ```
 
 
-# Factor Analysis
+# Principal Components Scoring
 
-```{r factor-correlation}
-
-cor.mat <- round(cor(data.clean), 2)
-
-```
-
-
-```{r factor-analysis-1}
-
-data.clean.orig <- data |> 
-  column_to_rownames("MSA") |> 
-  dplyr::select(-c("Name", "State"))
-
-
-factanal(x = data.clean,
-         factors = 2,
-         rotation = "varimax",
-         control = list(nstart = 1e5))
-```
-
+This section takes the three substantive data sets and generates principal component scores on each to reduce the dimensionality of each data set. 
 
 ```{r principal-components}
 
-
-data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
-
-varlist.short <- c( "hospital_emp_qcew", 
-             "hospital_estab_qcew",
-             "inst_hosp_ahacommunityhospitals",
-             "inst_hosp_ahabeds",
-             "inst_hosp_nihresearchfunding")
-
-# Rescale the variables from 0-1
-data.clean <- data |>
-  mutate(across(all_of(varlist.short), # Variables to scale
-                ~scale(.x),                                          # Scale relative to max
-                .names = "{col}_rescaled")) |>                             # Add "max" suffix
-  dplyr::select(MSA, ends_with("_rescaled")) |>                            # select chosen variables
-  column_to_rownames("MSA")
+# Create list of data sets
+pc.list <- list("Demographics" = data.clean.demo,
+                "Economic" = data.clean.econ,
+                "Hospitals" = data.clean.hosp,
+                "Higher Ed" = data.clean.hied)
 
 
-components <- principal(data.clean,
-                        nfactors = 1)
+# Generate principal components
+pc.list.scores <- map(
+  .x = pc.list,
+  .f = ~principal(.x,
+                  nfactors = 1,
+                  rotate = "varimax")
+) 
 
-components
+pc.scores.df <- bind_cols(pc.list.scores$Demographics$scores,
+                          pc.list.scores$Economic$scores,
+                          pc.list.scores$Hospitals$scores,
+                          pc.list.scores$`Higher Ed`$scores)
 
-biplot(components)
+names(pc.scores.df) <- c("PC_demographics",
+                         "PC_economics",
+                         "PC_hospitals",
+                         "PC_highered")
 
-scores <- components$scores
+data.out <- data.clean |> 
+  bind_cols(pc.scores.df) |> 
+  mutate(PC_demographics_ntile = ntile(PC_demographics, 
+                                       n = 10),
+         PC_economics_ntile = ntile(PC_economics,
+                                    n = 10),
+         PC_hospitals_ntile = ntile(PC_hospitals,
+                                    n = 10),
+         PC_highered_ntile = ntile(PC_highered,
+                                   n = 10))
 
-data.out <- data |> 
-  bind_cols(scores) 
+```
 
 
+## Visuals of Principal Component Rankings
+
+```{r}
+
+data.table <- data.out |> 
+  dplyr::select(starts_with("PC_")) |> 
+  dplyr::select(contains("ntile")) 
+
+data.table$MSA <- rownames(data.table)
+rownames(data.table) <- NULL
+
+table.out <- data.table |> 
+  dplyr::select("MSA", starts_with("PC_")) |> 
+  kableExtra::kbl(format = "html") |> 
+  column_spec(2, color = "white", background = spec_color(data.table$PC_demographics, option = "viridis", direction = 1)) |> 
+  column_spec(3, color = "white", background = spec_color(data.table$PC_economics, option = "viridis", direction = 1)) |> 
+  column_spec(4, color = "white", background = spec_color(data.table$PC_hospitals, option = "viridis", direction = 1)) |> 
+  column_spec(5, color = "white", background = spec_color(data.table$PC_highered, option = "viridis", direction = 1)) |> 
+  scroll_box(height = "500px")
+
+table.out
+
+```
+
+# Cluster Analysis of Principal Components
+
+For this section I'm going to generate some clusters using the principal components scores and a couple of different distance clustering techniques. I'm going to start off using the raw PC scores, but will also generate clusters using percentile groupings to try to condense the MSAs into a smaller number of groups to make things more tractable. 
+
+```{r higherarchical-clustering-euclidean-raw-score}
+
+# How many clusters?
+cluster_num <- 15
+
+# Take data with MSA rownames and filter out raw PC scores 
+temp <- data.out |> 
+  dplyr::select(PC_demographics, 
+                PC_economics,
+                PC_highered, 
+                PC_hospitals)
+ 
+# Calculate euclidean distance 
+distance.matrix <- as.matrix(temp) # convert to matrix
+
+distance <- as.dist(1 - cor(t(distance.matrix))) # calculate correlation-based
+
+#Euclidean Distance
+#distance <- dist(temp)
+
+# Generate cluster tree
+hc.tree <- hclust(distance, 
+                  method = "complete")
+
+cluster.ids <- cutree(hc.tree,
+                      k = cluster_num)
+
+data.final <- data |> 
+  bind_cols(cluster.ids) |> 
+  bind_cols(pc.scores.df) |> 
+  dplyr::rename("Cluster ID" = `...77`) |> 
+  mutate(PC_demographics_ntile = ntile(PC_demographics, 
+                                       n = 10),
+         PC_economics_ntile = ntile(PC_economics,
+                                    n = 10),
+         PC_hospitals_ntile = ntile(PC_hospitals,
+                                    n = 10),
+         PC_highered_ntile = ntile(PC_highered,
+                                   n = 10))
+
+```
 
 
+## Visuals
+
+Trying to figure out how to break down the five dimensions here. I've broken the data out into 15 clusters. The X axis, Y axis, color, and transparency/density show the four dimensions on which the data are divided into principal components.  
+
+```{r}
+
+
+ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_economics_ntile)) +
+  geom_raster(aes(fill = PC_hospitals_ntile, alpha = PC_highered_ntile), interpolate = TRUE) +
+  facet_wrap(. ~ `Cluster ID`) +
+  viridis::scale_fill_viridis() 
 ```
