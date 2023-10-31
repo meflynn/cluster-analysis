@@ -1,0 +1,393 @@
+---
+title: "Exploratory Cluster Analysis for Josie Schafer: Part 4"
+author: "Michael Flynn, Prior Analytics, LLC."
+fontsize: "11"
+format: 
+  html: default
+#  pdf: default
+#pdf-engine: pdflatex
+csl: "CSL/apsa.csl"
+bibliography: references.bib
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(brms)
+library(cluster)
+library(factoextra)
+library(dendextend)
+library(ggdendro)
+library(here)
+library(tmaptools)
+library(kableExtra)
+library(lme4)
+library(modelsummary)
+library(psych)
+```
+
+# Goals
+
+1. Build on previous work and feedback from client. 
+2. Remove several demographics variables from previous demographics groupings to simplify.
+    - Remove Speak English less than very well – as noted
+    - Remove Percent living in poverty, under 18 in poverty, over 65 in poverty.
+    - Remove employed and put back labor force
+    - Remove no health insurance
+    - Remove renter occ and put in Owner Occ
+    - Did I ever provide median income – if have I would like that back in?
+3. Once the demographics variable is pared down try one and two demographics groupings from previous versions. One group where all demographics and economic variables are consolidated and another version where they're split out. 
+4. Add median income back into demographics variables.
+5. Try to get groups to be more evenly distributed.
+6. Try 20 and 30 clusters
+
+
+# Data Cleaning
+
+Just like last time we read in the data and clean it and rescale the variables. Again, rescaling is done using z-score methods This seems to help produce more evenly distributed clusters.
+
+```{r data-cleaning}
+
+# Read in data and select relevant variables for clusters. 
+# Focus is on demographic and anchor institution variables.
+
+# Read in raw data file
+data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
+
+# Set percentile grouping number
+ntile_num <- 30
+
+
+# Create variable lists for each of the substantive focus areas
+vars.demo <- c("totpop_19", # total population
+               "popchange", # population change
+               "medage",    # median age
+               "poc",       #percent people of color
+               "highed",     # percent pop with bachelor's or higher
+               "forborn",     # percent pop foreign born
+               #"noenglish",  # percent pop speaking english less than very well (omit correlated 0.90 with forborn)
+               "net_mig")     # net domestic migration
+
+vars.econ <- c("medearn",
+               "pov",      # percent people living in poverty
+              #"youngpov",  #percent population under 18 living in poverty (Requested remove)
+              #"oldpov",    # percent population over 65 living in poverty) (Requested remove)
+              "labfor",    # percent pop in labor force (omit 0.92 cor with emp)
+              #"emp",       # percent people employed (Requested remove)
+              #"nohealthin", # population with no health insurance (Requested remove)
+              "ownerocc"    # percent pop owner (omit perfectly neg correlated wtih rent)
+              #"renterocc"   # percent pop renter (Requested remove)
+              )
+              
+vars.hied <- c("highered_emp_qcew", # Higher education employment
+                 "highered_estab_qcew", # Higher education establishments
+                 "inst_highered_endowment", # higher education inst endowments for National association of college and uni business officers
+                 "inst_highered_nihresearchfunding", #NIH research funding
+                 "inst_highered_nsfresearchfunding", #NSF research funding
+                 "inst_ipeds_enrollment_all", # total enrollment
+                 "inst_ipeds_associatescolleges", # associates granting institutions
+                 "inst_ipeds_baccalaureatecolleges", # bachelor's granting institutions
+                 "inst_ipeds_doctoralunihighrese", # doctoral granting high research institutions
+                 "inst_ipeds_undergradgrad", # higher ed undergraduate enrollment
+                 "inst_ipeds_totalgradenrollment", # higher ed institutions graduate enrollment
+                 "inst_ipeds_completions", # higher ed completions
+                 "inst_ipeds_pellawards") # Pell awards total amount
+
+
+vars.hosp <- c("hospital_emp_qcew", # Hospital employment
+               "hospital_estab_qcew", # Hospital Establishments
+               "inst_hosp_ahacommunityhospitals", # Community hospitals
+               "inst_hosp_ahabeds", # Community hospital beds
+               "inst_hosp_ahaadmissions", # Community hospital admissions
+               "inst_hosp_ahasurgicaloperations", # Surgical operations
+               "inst_hosp_nihresearchfunding", # Hospital nih research funding
+               "inst_hosp_medbeneficiaries") # Medicare beneficiaries
+
+
+# Rescale the variables 
+# I'm also changing the direction of the economic variables so positive values are more "positive"
+data.clean <- data |>
+  mutate(pov = 100 - pov) |> 
+  mutate(across(all_of(c(vars.hied, vars.hosp)), # Variables to scale
+                ~.x/totpop_19,
+                .names = "{col}_percapita"),
+         across(all_of(c(vars.demo, vars.econ)),
+                ~scale(.x),                                          # Scale relative to max
+                .names = "{col}_rescaled"),
+         across(all_of(ends_with("_percapita")),
+                ~scale(.x),
+                .names = "{col}_rescaled")) |>                             # Add "max" suffix
+  dplyr::select(MSA, ends_with("_rescaled")) |>                            # select chosen variables
+  column_to_rownames("MSA")
+
+
+# Break data up into substantive component data sets
+
+# Demographic data
+data.clean.demo <- data.clean |> 
+  dplyr::select(starts_with(vars.demo))
+
+# Economic data
+data.clean.econ <- data.clean |> 
+  dplyr::select(starts_with(vars.econ))
+
+# Higher education data
+data.clean.hied <- data.clean |> 
+  dplyr::select(starts_with(vars.hied))
+
+# Hospital data
+data.clean.hosp <- data.clean |> 
+  dplyr::select(starts_with(vars.hosp))
+
+```
+
+
+# Principal Components Scoring
+
+This section takes the three substantive data sets and generates principal component scores on each to reduce the dimensionality of each data set. 
+
+```{r principal-components}
+
+# Create list of data sets
+pc.list <- list("Demographics" = data.clean.demo,
+                "Economic" = data.clean.econ,
+                "Hospitals" = data.clean.hosp,
+                "Higher Ed" = data.clean.hied)
+
+
+# Generate principal components
+pc.list.scores <- map(
+  .x = pc.list,
+  .f = ~principal(.x,
+                  nfactors = 1,
+                  rotate = "varimax")
+) 
+
+pc.scores.df <- bind_cols(pc.list.scores$Demographics$scores,
+                          pc.list.scores$Economic$scores,
+                          pc.list.scores$Hospitals$scores,
+                          pc.list.scores$`Higher Ed`$scores)
+
+names(pc.scores.df) <- c("PC_demographics",
+                         "PC_economics",
+                         "PC_hospitals",
+                         "PC_highered")
+
+data.out <- data.clean |> 
+  bind_cols(pc.scores.df) |> 
+  mutate(PC_demographics_ntile = ntile(PC_demographics, 
+                                       n = ntile_num),
+         PC_economics_ntile = ntile(PC_economics,
+                                    n = ntile_num),
+         PC_hospitals_ntile = ntile(PC_hospitals,
+                                    n = ntile_num),
+         PC_highered_ntile = ntile(PC_highered,
+                                   n = ntile_num))
+
+```
+
+
+## Visuals of Principal Component Rankings
+
+```{r}
+
+data.table <- data.out |> 
+  dplyr::select(starts_with("PC_")) |> 
+  dplyr::select(contains("ntile")) 
+
+data.table$MSA <- rownames(data.table)
+rownames(data.table) <- NULL
+
+table.out <- data.table |> 
+  dplyr::select("MSA", starts_with("PC_")) |> 
+  kableExtra::kbl(format = "html") |> 
+  column_spec(2, color = "white", background = spec_color(data.table$PC_demographics, option = "viridis", direction = 1)) |> 
+  column_spec(3, color = "white", background = spec_color(data.table$PC_economics, option = "viridis", direction = 1)) |> 
+  column_spec(4, color = "white", background = spec_color(data.table$PC_hospitals, option = "viridis", direction = 1)) |> 
+  column_spec(5, color = "white", background = spec_color(data.table$PC_highered, option = "viridis", direction = 1)) |> 
+  scroll_box(height = "500px")
+
+table.out
+
+```
+
+# Cluster Analysis of Principal Components
+
+For this section I'm going to generate some clusters using the principal components scores and a couple of different distance clustering techniques. I'm going to start off using the raw PC scores, but will also generate clusters using percentile groupings to try to condense the MSAs into a smaller number of groups to make things more tractable. 
+
+```{r higherarchical-clustering-euclidean-raw-score}
+
+# How many clusters?
+cluster_num <- 30
+
+# Take data with MSA rownames and filter out raw PC scores 
+temp <- data.out |> 
+  dplyr::select(PC_demographics, 
+                PC_economics,
+                PC_highered, 
+                PC_hospitals)
+ 
+# Calculate euclidean distance 
+distance.matrix <- as.matrix(temp) # convert to matrix
+
+distance <- as.dist(1 - cor(t(distance.matrix))) # calculate correlation-based
+
+#Euclidean Distance
+#distance <- dist(temp)
+
+# Generate cluster tree
+hc.tree <- hclust(distance, 
+                  method = "complete")
+
+cluster.ids <- cutree(hc.tree,
+                      k = cluster_num)
+
+data.final <- data |> 
+  bind_cols(cluster.ids) |> 
+  bind_cols(pc.scores.df) |> 
+  dplyr::rename("Cluster ID" = `...77`) |> 
+  mutate(PC_demographics_ntile = ntile(PC_demographics, 
+                                       n = ntile_num),
+         PC_economics_ntile = ntile(PC_economics,
+                                    n = ntile_num),
+         PC_hospitals_ntile = ntile(PC_hospitals,
+                                    n = ntile_num),
+         PC_highered_ntile = ntile(PC_highered,
+                                   n = ntile_num))
+
+```
+
+
+## Visuals
+
+### Demographic and Economic Density
+
+This figure just looks at the core demographic and economic dimensions and plots the density of observations.
+
+```{r demographic-density-map}
+ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_economics_ntile)) +
+  geom_density2d_filled(countour_var = "count",
+                        n = 100) +
+  theme_minimal() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Demographics and Economic Dimensions")
+  
+
+```
+
+
+### Hospitals and Higher Ed Density
+
+This figure just looks at the hospital and higher ed dimensions and plots the density of observations. I think this is useful because it shows that there's a pretty strong relationship between the anchor institution categories. In general, we see two peaks—places with high intensity on both and low intensity on both. This probably isn't surprising, especially given the links between major hospitals and research universities in many MSAs. Again, probably a lot of what we're picking up here is population more than anything specific about anchor institutions per se.
+
+```{r anchor-institution-density-map}
+ggplot(data.final, aes(x = PC_highered_ntile, y = PC_hospitals_ntile)) +
+  geom_density2d_filled(countour_var = "count",
+                        n = 100) +
+  theme_minimal() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Anchor Institutions")
+
+
+```
+
+### Demographic and Hospital Density
+
+This next figure combines the demographics and hospitals dimensions to show the density of MSAs across both dimensions. 
+
+```{r hospitals-and-demographics-density-map}
+ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_hospitals_ntile)) +
+  geom_density2d_filled(countour_var = "count",
+                        n = 100) +
+  theme_minimal() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Demographics and Hospitals")
+
+```
+
+
+### Demographic and Higher Ed Density
+
+Same thing, but for demographics and higher education. This shows us where the bulk of the MSAs are located on these two dimensions. As with hospitals, we see 
+
+```{r highered-and-demographics-density-map}
+ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_highered_ntile)) +
+  geom_density2d_filled(countour_var = "count",
+                        n = 100) +
+  theme_minimal() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Demographics and Higher Ed")
+
+```
+
+### Economic and Hospital Density
+
+This next figure combines the economic and hospitals dimensions to show the density of MSAs across both dimensions. 
+
+```{r hospitals-and-economics-density-map}
+ggplot(data.final, aes(x = PC_economics_ntile, y = PC_hospitals_ntile)) +
+  geom_density2d_filled(countour_var = "count",
+                        n = 100) +
+  theme_minimal() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Economics and Hospitals")
+
+```
+
+### Economic and Higher Ed Density
+
+
+This next figure combines the economic and higher ed dimensions to show the density of MSAs across both dimensions. 
+
+```{r highered-and-economics-density-map}
+ggplot(data.final, aes(x = PC_economics_ntile, y = PC_highered_ntile)) +
+  geom_density2d_filled(countour_var = "count",
+                        n = 100) +
+  theme_minimal() +
+  viridis::scale_fill_viridis(discrete = TRUE) +
+  labs(title = "Economics and Higher Ed")
+
+```
+
+
+### Scatterplots
+
+I'm not sure how much these add, but I wanted to get a sense of the distribution of the different MSAs in a way that's not clouded by the density plots. I think the density plots may actually be clearer, though. 
+
+```{r scatter-plot-demographics-economics-highered}
+
+ggplot(data.final, aes(x = PC_economics_ntile, y = PC_demographics_ntile, color = PC_highered_ntile)) +
+  geom_point(position = position_jitter(width = 0.5, height = 0.5)) +
+  theme_minimal() +
+  viridis::scale_color_viridis(discrete = FALSE) +
+  labs(title = "Demographics and Higher Ed")
+
+```
+
+
+```{r scatter-plot-demographics-economics-hospitals}
+
+ggplot(data.final, aes(x = PC_economics_ntile, y = PC_demographics_ntile, color = PC_hospitals_ntile)) +
+  geom_point(position = position_jitter(width = 0.5, height = 0.5)) +
+  theme_minimal() +
+  viridis::scale_color_viridis(discrete = FALSE) +
+  labs(title = "Demographics and Hospitals")
+
+```
+
+### Cluster Maping of MSAs
+
+Trying to figure out how to break down the five dimensions here. I've broken the data out into `r cluster_num` clusters. The X axis, Y axis, color, and transparency/density show the four dimensions on which the data are divided into principal components.  
+
+```{r}
+
+
+ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_economics_ntile)) +
+  geom_raster(aes(fill = PC_hospitals_ntile, alpha = PC_highered_ntile), interpolate = FALSE) +
+  facet_wrap(. ~ `Cluster ID`) +
+  theme_minimal() +
+  viridis::scale_fill_viridis() 
+
+
+
+```

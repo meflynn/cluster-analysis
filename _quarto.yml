@@ -1,5 +1,5 @@
 project:
-  title: "Exploratory Cluster Analysis Part 2"
+  title: "Exploratory Cluster Analysis"
   type: website
   output-dir: docs
 
@@ -21,6 +21,8 @@ website:
         href: cluster-analysis-uno-2.qmd
       - text: "Part 3"
         href: cluster-analysis-uno-3.qmd
+      - text: "Part 4"
+        href: cluster-analysis-uno-4.qmd
 format:
   html:
     theme: default
