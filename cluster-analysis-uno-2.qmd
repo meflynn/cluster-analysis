@@ -4,8 +4,8 @@ author: "Michael Flynn, Prior Analytics, LLC."
 fontsize: "11"
 format: 
   html: default
-  pdf: default
-pdf-engine: pdflatex
+#  pdf: default
+#pdf-engine: pdflatex
 csl: "CSL/apsa.csl"
 bibliography: references.bib
 ---

@@ -55,8 +55,10 @@ Just like last time we read in the data and clean it and rescale the variables. 
 data <- readxl::read_xlsx(here("data/anchor regions analysis.xlsx"))
 
 # Set percentile grouping number
-ntile_num <- 30
+ntile_num <- 100
 
+# How many clusters?
+cluster_num <- 35
 
 # Create variable lists for each of the substantive focus areas
 vars.demo <- c("totpop_19", # total population
@@ -112,12 +114,12 @@ data.clean <- data |>
                 ~.x/totpop_19,
                 .names = "{col}_percapita"),
          across(all_of(c(vars.demo, vars.econ)),
-                ~scale(.x),                                          # Scale relative to max
+                ~arm::rescale(.x),                                          # Scale relative to max
                 .names = "{col}_rescaled"),
          across(all_of(ends_with("_percapita")),
-                ~scale(.x),
+                ~arm::rescale(.x),
                 .names = "{col}_rescaled")) |>                             # Add "max" suffix
-  dplyr::select(MSA, ends_with("_rescaled")) |>                            # select chosen variables
+  dplyr::select(MSA, contains("_rescaled")) |>                            # select chosen variables
   column_to_rownames("MSA")
 
 
@@ -217,23 +219,22 @@ For this section I'm going to generate some clusters using the principal compone
 
 ```{r higherarchical-clustering-euclidean-raw-score}
 
-# How many clusters?
-cluster_num <- 30
+
 
 # Take data with MSA rownames and filter out raw PC scores 
 temp <- data.out |> 
-  dplyr::select(PC_demographics, 
-                PC_economics,
-                PC_highered, 
-                PC_hospitals)
+  dplyr::select(PC_demographics_ntile, 
+                PC_economics_ntile,
+                PC_highered_ntile, 
+                PC_hospitals_ntile)
  
 # Calculate euclidean distance 
-distance.matrix <- as.matrix(temp) # convert to matrix
+#distance.matrix <- as.matrix(temp) # convert to matrix
 
-distance <- as.dist(1 - cor(t(distance.matrix))) # calculate correlation-based
+#distance <- as.dist(1 - cor(t(distance.matrix))) # calculate correlation-based
 
 #Euclidean Distance
-#distance <- dist(temp)
+distance <- dist(temp)
 
 # Generate cluster tree
 hc.tree <- hclust(distance, 
@@ -243,9 +244,8 @@ cluster.ids <- cutree(hc.tree,
                       k = cluster_num)
 
 data.final <- data |> 
-  bind_cols(cluster.ids) |> 
-  bind_cols(pc.scores.df) |> 
-  dplyr::rename("Cluster ID" = `...77`) |> 
+  bind_cols(`Cluster ID` = cluster.ids, 
+            scores = pc.scores.df) |> 
   mutate(PC_demographics_ntile = ntile(PC_demographics, 
                                        n = ntile_num),
          PC_economics_ntile = ntile(PC_economics,
@@ -253,7 +253,30 @@ data.final <- data |>
          PC_hospitals_ntile = ntile(PC_hospitals,
                                     n = ntile_num),
          PC_highered_ntile = ntile(PC_highered,
-                                   n = ntile_num))
+                                   n = ntile_num)) |> 
+  dplyr::select(Name, State, MSA, `Cluster ID`, starts_with("PC_"), everything())
+
+
+# Export data
+
+# Full data with MSAs, input variables, cluster IDs, and principal component scores.
+write_csv(data.final,
+          file = here::here("data/data-full-20231103.csv"))
+
+writexl::write_xlsx(data.final,
+                    path = here::here("data/data-full-20231103.xlsx"))
+
+# Summary data with the mean of the ariables used to calculate the principal component scores.
+data.final.summary <- data.final |> 
+  group_by(`Cluster ID`) |> 
+  dplyr::summarise(across(all_of(c(vars.demo, vars.econ, vars.hied, vars.hosp)),
+                          ~ mean(.x)))
+
+write_csv(data.final.summary,
+          file = here::here("data/data-cluster-summary-20231103.csv"))
+
+writexl::write_xlsx(data.final.summary,
+                    path = here::here("data/data-cluster-summary-20231103.xlsx"))
 
 ```
 
@@ -379,14 +402,21 @@ ggplot(data.final, aes(x = PC_economics_ntile, y = PC_demographics_ntile, color 
 
 Trying to figure out how to break down the five dimensions here. I've broken the data out into `r cluster_num` clusters. The X axis, Y axis, color, and transparency/density show the four dimensions on which the data are divided into principal components.  
 
-```{r}
+```{r full-distribution-panel}
+#| column: page
+#| fig-width: 20
+#| fig-height: 10
+
 
 
 ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_economics_ntile)) +
   geom_raster(aes(fill = PC_hospitals_ntile, alpha = PC_highered_ntile), interpolate = FALSE) +
-  facet_wrap(. ~ `Cluster ID`) +
+  facet_wrap(. ~ `Cluster ID`,
+             ncol = 8) +
   theme_minimal() +
-  viridis::scale_fill_viridis() 
+  theme(text = element_text(size = 18)) +
+  viridis::scale_fill_viridis() +
+  coord_fixed(ratio = 0.8)
 
 
 
