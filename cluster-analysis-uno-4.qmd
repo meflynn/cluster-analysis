@@ -421,3 +421,12 @@ ggplot(data.final, aes(x = PC_demographics_ntile, y = PC_economics_ntile)) +
 
 
 ```
+
+
+# Regression output
+
+```{r regression-model}
+
+summary(lm(PC_economics ~ PC_demographics + PC_hospitals + PC_highered, data = data.final))
+
+```

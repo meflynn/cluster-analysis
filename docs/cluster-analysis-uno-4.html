@@ -169,6 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cluster-maping-of-msas" id="toc-cluster-maping-of-msas" class="nav-link" data-scroll-target="#cluster-maping-of-msas">Cluster Maping of MSAs</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#regression-output" id="toc-regression-output" class="nav-link" data-scroll-target="#regression-output">Regression output</a></li>
   </ul>
 </nav>
     </div>
@@ -3054,10 +3055,39 @@ unknown parameters: `countour_var`</code></pre>
 <p><img src="cluster-analysis-uno-4_files/figure-html/full-distribution-panel-1.png" class="img-fluid" width="1920"></p>
 </div>
 </div>
-
-
 </section>
 </section>
+</section>
+<section id="regression-output" class="level1">
+<h1>Regression output</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(PC_economics <span class="sc">~</span> PC_demographics <span class="sc">+</span> PC_hospitals <span class="sc">+</span> PC_highered, <span class="at">data =</span> data.final))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = PC_economics ~ PC_demographics + PC_hospitals + 
+    PC_highered, data = data.final)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.97277 -0.59564  0.00143  0.62205  2.33363 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -2.157e-17  4.964e-02   0.000    1.000    
+PC_demographics  3.460e-01  5.166e-02   6.697 8.73e-11 ***
+PC_hospitals    -5.528e-03  5.151e-02  -0.107    0.915    
+PC_highered     -3.980e-02  8.410e-03  -4.733 3.24e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9247 on 343 degrees of freedom
+Multiple R-squared:  0.1523,    Adjusted R-squared:  0.1449 
+F-statistic: 20.54 on 3 and 343 DF,  p-value: 2.914e-12</code></pre>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->
